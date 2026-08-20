@@ -1,0 +1,49 @@
+name: PR Welcome
+
+on:
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Thank contributor
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const issue_number = context.payload.pull_request.number;
+            const contributor = context.payload.pull_request.user.login;
+
+            const message = `## 🎉 Thanks for contributing, @${contributor}!
+
+Thank you for opening this Pull Request and contributing to **OpenSource-Hunt**! 🚀
+
+Your PR has been received successfully.
+
+### 🔍 What happens next?
+
+Your contribution will be reviewed by an **OpenSource-Hunt maintainer**.
+
+The maintainer may:
+
+- ✅ Approve and merge your PR
+- 💬 Suggest improvements
+- 🔄 Request changes
+
+Please keep an eye on this Pull Request for review comments.
+
+Thank you for helping us build and learn together! 🌊
+
+> **Build. Learn. Contribute.**`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue_number,
+              body: message
+            });
