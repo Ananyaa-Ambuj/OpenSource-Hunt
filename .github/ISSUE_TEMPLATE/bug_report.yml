@@ -1,0 +1,48 @@
+name: 🐛 Bug Report
+description: Report a bug or broken functionality
+title: "[Bug]: "
+labels:
+  - bug
+  - beginner friendly
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐛 Bug Report
+
+        Thanks for helping improve OpenSource-Hunt!
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What is the problem?
+      description: Clearly describe the bug.
+      placeholder: Describe what is broken...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should happen?
+      placeholder: I expected...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened?
+      placeholder: Instead, what happened was...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Possible solution
+      description: If you have an idea, describe it here.
+      placeholder: A possible solution could be...

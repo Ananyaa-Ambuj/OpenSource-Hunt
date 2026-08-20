@@ -1,0 +1,99 @@
+name: Auto Label Issues
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  issues: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add labels based on issue content
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const text = `${issue.title} ${issue.body || ''}`.toLowerCase();
+
+            const labels = [];
+
+            // Documentation
+            if (
+              text.includes('documentation') ||
+              text.includes('docs') ||
+              text.includes('readme') ||
+              text.includes('typo')
+            ) {
+              labels.push('documentation');
+            }
+
+            // Bug
+            if (
+              text.includes('bug') ||
+              text.includes('broken') ||
+              text.includes('error') ||
+              text.includes('fix')
+            ) {
+              labels.push('bug');
+            }
+
+            // Enhancement
+            if (
+              text.includes('feature') ||
+              text.includes('enhancement') ||
+              text.includes('improve') ||
+              text.includes('add')
+            ) {
+              labels.push('enhancement');
+            }
+
+            // Beginner friendly
+            if (
+              text.includes('beginner') ||
+              text.includes('easy') ||
+              text.includes('good first issue')
+            ) {
+              labels.push('good first issue');
+              labels.push('beginner friendly');
+            }
+
+            // Difficulty
+            if (text.includes('easy')) {
+              labels.push('easy');
+            }
+
+            if (
+              text.includes('medium') ||
+              text.includes('intermediate')
+            ) {
+              labels.push('medium');
+            }
+
+            // Help wanted
+            if (
+              text.includes('help wanted') ||
+              text.includes('looking for contributor')
+            ) {
+              labels.push('help wanted');
+            }
+
+            if (labels.length === 0) {
+              console.log('No matching labels found.');
+              return;
+            }
+
+            // Remove duplicate labels
+            const uniqueLabels = [...new Set(labels)];
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              labels: uniqueLabels
+            });
+
+            console.log(`Added labels: ${uniqueLabels.join(', ')}`);

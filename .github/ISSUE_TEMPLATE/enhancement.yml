@@ -1,0 +1,31 @@
+name: ✨ Enhancement
+description: Suggest an improvement or new feature
+title: "[Enhancement]: "
+labels:
+  - enhancement
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ✨ Enhancement
+
+        Suggest an improvement that would make OpenSource-Hunt better.
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to improve?
+      description: Explain your idea.
+      placeholder: I think we should...
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefit
+    attributes:
+      label: Why would this be useful?
+      description: Explain the benefit of this improvement.
+      placeholder: This would help because...
+    validations:
+      required: true

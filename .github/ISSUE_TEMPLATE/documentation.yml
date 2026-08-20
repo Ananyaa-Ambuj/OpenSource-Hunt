@@ -1,0 +1,32 @@
+name: 📚 Documentation Improvement
+description: Improve README or project documentation
+title: "[Docs]: "
+labels:
+  - documentation
+  - beginner friendly
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📚 Documentation Improvement
+
+        Documentation contributions are a great way to make your first Open Source contribution!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What needs improvement?
+      description: Explain what is incorrect, missing, or unclear.
+      placeholder: The documentation currently...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Suggested improvement
+      description: Explain what should be changed.
+      placeholder: We should...
+    validations:
+      required: true
