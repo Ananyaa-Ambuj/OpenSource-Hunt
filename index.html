@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <meta
+    name="description"
+    content="Explore OpenLake's open-source projects and discover opportunities to learn, build and contribute."
+  />
+
+  <title>OpenLake | Open Source Projects</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: #f7f9fc;
+      color: #172033;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 1px solid #e5e7eb;
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+
+    .logo span {
+      color: #2563eb;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      color: #4b5563;
+    }
+
+    .nav-links a:hover {
+      color: #2563eb;
+    }
+
+    .hero {
+      max-width: 1100px;
+      margin: auto;
+      padding: 90px 24px 60px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: #e8f0ff;
+      color: #2563eb;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      color: #2563eb;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: auto;
+      color: #667085;
+      font-size: 1.1rem;
+    }
+
+    .hero-buttons {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+
+    .button-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .button-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .button-secondary {
+      background: white;
+      border: 1px solid #d1d5db;
+    }
+
+    .button-secondary:hover {
+      border-color: #2563eb;
+      color: #2563eb;
+    }
+
+    .stats {
+      max-width: 1000px;
+      margin: 20px auto 70px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .stat {
+      background: white;
+      padding: 25px;
+      text-align: center;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #2563eb;
+    }
+
+    .stat-label {
+      color: #667085;
+    }
+
+    .projects-section {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px 24px 80px;
+    }
+
+    .section-header {
+      margin-bottom: 30px;
+    }
+
+    .section-header h2 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .section-header p {
+      color: #667085;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .search-box,
+    .language-filter {
+      padding: 12px 15px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      background: white;
+      font-size: 1rem;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .language-filter {
+      min-width: 180px;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .project-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      min-height: 260px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .project-card h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .project-description {
+      color: #667085;
+      font-size: 0.95rem;
+      flex: 1;
+      margin-bottom: 20px;
+    }
+
+    .project-meta {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 18px;
+      color: #667085;
+      font-size: 0.9rem;
+    }
+
+    .language {
+      font-weight: 700;
+      color: #2563eb;
+    }
+
+    .project-link {
+      display: inline-block;
+      text-align: center;
+      padding: 10px;
+      border-radius: 8px;
+      background: #eff6ff;
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    .project-link:hover {
+      background: #dbeafe;
+    }
+
+    .loading,
+    .error,
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px;
+      color: #667085;
+    }
+
+    .error {
+      color: #dc2626;
+    }
+
+    footer {
+      background: #111827;
+      color: white;
+      padding: 50px 24px;
+    }
+
+    .footer-container {
+      max-width: 1100px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .footer-container p {
+      color: #9ca3af;
+      margin: 10px 0 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a:hover {
+      color: #93c5fd;
+    }
+
+    #logo_open{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+        gap:3px;
+    }
+
+
+    @media (max-width: 900px) {
+      .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 650px) {
+      .nav-links {
+        display: none;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 60px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+    <div id="logo_open" >
+        <img src="public/favicon.png" alt="Logo" width="32" height="32"> 
+        <a href="#" class="logo">Open<span>Lake</span></a>
+    </div>
+    <div class="nav-links">
+        <a href="#projects">Projects</a>
+        <a href="https://openlake.in/" target="_blank">Website</a>
+        <a href="https://github.com/OpenLake" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+    <section class="hero">
+      <span class="hero-badge">IIT Bhilai • Open Source</span>
+
+      <h1>
+        Explore <span>OpenLake</span> Projects
+      </h1>
+
+      <p>
+        Discover open-source projects from the OpenLake community,
+        explore technologies, and find something you can learn from
+        or contribute to.
+      </p>
+
+      <div class="hero-buttons">
+        <a
+          class="button button-primary"
+          href="#projects"
+        >
+          Explore Projects
+        </a>
+
+        <a
+          class="button button-secondary"
+          href="https://github.com/OpenLake"
+          target="_blank"
+        >
+          View GitHub
+        </a>
+      </div>
+    </section>
+
+    <section class="stats">
+
+      <div class="stat">
+        <span
+          class="stat-number"
+          id="repo-count"
+        >
+          —
+        </span>
+
+        <span class="stat-label">
+          Repositories
+        </span>
+      </div>
+
+      <div class="stat">
+        <span
+          class="stat-number"
+          id="star-count"
+        >
+          —
+        </span>
+
+        <span class="stat-label">
+          Total Stars
+        </span>
+      </div>
+
+      <div class="stat">
+        <span
+          class="stat-number"
+          id="fork-count"
+        >
+          —
+        </span>
+
+        <span class="stat-label">
+          Total Forks
+        </span>
+      </div>
+
+    </section>
+
+    <section
+      class="projects-section"
+      id="projects"
+    >
+
+      <div class="section-header">
+        <h2>OpenLake Projects</h2>
+
+        <p>
+          Browse repositories maintained by the OpenLake GitHub organization.
+        </p>
+      </div>
+
+      <div class="controls">
+
+        <input
+          type="search"
+          id="search"
+          class="search-box"
+          placeholder="Search projects..."
+        />
+
+        <select
+          id="language-filter"
+          class="language-filter"
+        >
+          <option value="all">
+            All Languages
+          </option>
+        </select>
+
+      </div>
+
+      <div
+        id="projects-grid"
+        class="projects-grid"
+      >
+        <div class="loading">
+          Loading OpenLake projects...
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer>
+
+    <div class="footer-container">
+
+      <h2>OpenLake</h2>
+
+      <p>
+        Build. Learn. Contribute.
+      </p>
+
+      <div class="footer-links">
+
+        <a
+          href="https://openlake.in/"
+          target="_blank"
+        >
+          Website
+        </a>
+
+        <a
+          href="https://github.com/OpenLake"
+          target="_blank"
+        >
+          GitHub
+        </a>
+
+        <a
+          href="https://www.instagram.com/openlake_iitbhilai/"
+          target="_blank"
+        >
+          Instagram
+        </a>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+  <script>
+
+    const API_URL =
+      "https://api.github.com/orgs/OpenLake/repos?per_page=100";
+
+    let repositories = [];
+
+    const grid =
+      document.getElementById("projects-grid");
+
+    const searchInput =
+      document.getElementById("search");
+
+    const languageFilter =
+      document.getElementById("language-filter");
+
+    async function loadRepositories() {
+
+      try {
+
+        const response =
+          await fetch(API_URL);
+
+        if (!response.ok) {
+          throw new Error(
+            "Unable to fetch repositories."
+          );
+        }
+
+        repositories =
+          await response.json();
+
+        repositories.sort(
+          (a, b) =>
+            b.stargazers_count -
+            a.stargazers_count
+        );
+
+        updateStats();
+
+        populateLanguages();
+
+        renderRepositories();
+
+      } catch (error) {
+
+        console.error(error);
+
+        grid.innerHTML = `
+          <div class="error">
+            <h3>Unable to load projects</h3>
+            <p>
+              Please try again later.
+            </p>
+          </div>
+        `;
+
+      }
+
+    }
+
+    function updateStats() {
+
+      const totalStars =
+        repositories.reduce(
+          (total, repo) =>
+            total + repo.stargazers_count,
+          0
+        );
+
+      const totalForks =
+        repositories.reduce(
+          (total, repo) =>
+            total + repo.forks_count,
+          0
+        );
+
+      document.getElementById(
+        "repo-count"
+      ).textContent =
+        repositories.length;
+
+      document.getElementById(
+        "star-count"
+      ).textContent =
+        totalStars;
+
+      document.getElementById(
+        "fork-count"
+      ).textContent =
+        totalForks;
+
+    }
+
+    function populateLanguages() {
+
+      const languages =
+        [
+          ...new Set(
+            repositories
+              .map(repo => repo.language)
+              .filter(Boolean)
+          )
+        ]
+        .sort();
+
+      languages.forEach(
+        language => {
+
+          const option =
+            document.createElement(
+              "option"
+            );
+
+          option.value =
+            language;
+
+          option.textContent =
+            language;
+
+          languageFilter.appendChild(
+            option
+          );
+
+        }
+      );
+
+    }
+
+    function renderRepositories() {
+
+      const searchTerm =
+        searchInput.value
+          .toLowerCase()
+          .trim();
+
+      const selectedLanguage =
+        languageFilter.value;
+
+      const filtered =
+        repositories.filter(repo => {
+
+          const matchesSearch =
+            repo.name
+              .toLowerCase()
+              .includes(searchTerm) ||
+            (repo.description || "")
+              .toLowerCase()
+              .includes(searchTerm);
+
+          const matchesLanguage =
+            selectedLanguage === "all" ||
+            repo.language === selectedLanguage;
+
+          return (
+            matchesSearch &&
+            matchesLanguage
+          );
+
+        });
+
+      if (filtered.length === 0) {
+
+        grid.innerHTML = `
+          <div class="empty">
+            <h3>No projects found</h3>
+            <p>
+              Try another search or language.
+            </p>
+          </div>
+        `;
+
+        return;
+      }
+
+      grid.innerHTML =
+        filtered
+          .map(createRepositoryCard)
+          .join("");
+
+    }
+
+    function createRepositoryCard(repo) {
+
+      const description =
+        repo.description ||
+        "No description available.";
+
+      const language =
+        repo.language ||
+        "Not specified";
+
+      return `
+        <article class="project-card">
+
+          <h3>
+            ${escapeHTML(repo.name)}
+          </h3>
+
+          <p class="project-description">
+            ${escapeHTML(description)}
+          </p>
+
+          <div class="project-meta">
+
+            <span class="language">
+              ${escapeHTML(language)}
+            </span>
+
+            <span>
+              ⭐ ${repo.stargazers_count}
+            </span>
+
+            <span>
+              🍴 ${repo.forks_count}
+            </span>
+
+          </div>
+
+          <a
+            class="project-link"
+            href="${repo.html_url}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Repository →
+          </a>
+
+        </article>
+      `;
+
+    }
+
+    function escapeHTML(value) {
+
+      const div =
+        document.createElement("div");
+
+      div.textContent = value;
+
+      return div.innerHTML;
+
+    }
+
+    searchInput.addEventListener(
+      "input",
+      renderRepositories
+    );
+
+    languageFilter.addEventListener(
+      "change",
+      renderRepositories
+    );
+
+    loadRepositories();
+
+  </script>
+
+</body>
+</html>
+
