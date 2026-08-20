@@ -43,9 +43,9 @@
 * [Pexels](https://pexels.com/)
 * [Lordicon](https://lordicon.com/)
 * [Figma](https://figma.com/)
-* CSS Grid Generator – CSS Grid Generator (Drag & Drop)
-* Practice Flexbox – Flexbox Froggy (A game for learning CSS Flexbox)
-* Practice Grid – Grid Garden (A game for learning CSS Grid)
+* [CSS Grid Generator](https://cssgridgenerator.io/)
+* [Practice Flexbox](https://flexboxfroggy.com/)
+* [Practice Grid](https://cssgridgarden.com/)
 
 ---
 
@@ -62,7 +62,7 @@
 * [All JavaScript Syntax in One Hour](https://www.youtube.com/watch?v=K2lfyPAwD80&t=2023s)
 * [JavaScript in 100 Seconds](https://youtu.be/DHjqpvDnNGE?si=nsK5hAiQHYLo0_xs)
 * [JavaScript Tutorial – W3Schools](https://www.w3schools.com/js/default.asp)
-* JavaScript Short Notes – `Javascript_Devlabs`
+* [JavaScript Short Notes](https://docs.google.com/document/d/1yOf1Yz9iI2Xxwu6SHY43pexQ750LrGpdGOWYVcV4eYw/edit?usp=sharing&urp=gmail_link)
 
 ---
 
@@ -75,7 +75,6 @@
 * [React Video 2](https://youtu.be/Tn6-PIqc4UM)
 * React – Fireship: React in 100 Seconds
 * React Hooks Explained – Web Dev Simplified
-* React Short Notes – `React_Devlabs`
 
 ---
 
@@ -87,7 +86,7 @@
 * [React Router Documentation](https://reactrouter.com/home)
 * [React Playlist](https://youtube.com/playlist?list=PLZlA0Gpn_vH8EtggFGERCwMY5u5hOjf-h)
 * [React Forms Video](https://youtu.be/Ul3y1LXxzdU)
-* React Short Notes – `React_Devlabs`
+* [React Short Notes](https://docs.google.com/document/d/1oYdokybg6y_9WOPNrUzha-_pO0MOW1jmqsyCCuXHcvc/edit?tab=t.0)
 
 ---
 
@@ -139,4 +138,4 @@
 * [Render Deployment Tutorial](https://youtu.be/uGH7M2NEu3Q)
 * [Vercel Deployment Tutorial](https://youtu.be/A2VoUyZZMCw)
 * [Full Stack Deployment Guide](https://youtu.be/E8xaV6fiTaA)
-* Production-Grade Website with React and Django – [Bitefy](https://bitefy.in/)
+* [Production-Grade Website with React and Django](https://bitefy.in/)
