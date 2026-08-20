@@ -2,7 +2,8 @@ name: PR Welcome
 
 on:
   pull_request_target:
-    types: [opened]
+    types:
+      - opened
 
 permissions:
   pull-requests: write
@@ -16,34 +17,26 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            const issue_number = context.payload.pull_request.number;
-            const contributor = context.payload.pull_request.user.login;
+            const prNumber = context.payload.pull_request.number;
+            const username = context.payload.pull_request.user.login;
 
-            const message = `## 🎉 Thanks for contributing, @${contributor}!
-
-Thank you for opening this Pull Request and contributing to **OpenSource-Hunt**! 🚀
-
-Your PR has been received successfully.
-
-### 🔍 What happens next?
-
-Your contribution will be reviewed by an **OpenSource-Hunt maintainer**.
-
-The maintainer may:
-
-- ✅ Approve and merge your PR
-- 💬 Suggest improvements
-- 🔄 Request changes
-
-Please keep an eye on this Pull Request for review comments.
-
-Thank you for helping us build and learn together! 🌊
-
-> **Build. Learn. Contribute.**`;
+            const message =
+              "## 🎉 Thanks for contributing, @" + username + "!\n\n" +
+              "Thank you for opening this Pull Request and contributing to **OpenSource-Hunt**! 🚀\n\n" +
+              "Your PR has been received successfully.\n\n" +
+              "### 🔍 What happens next?\n\n" +
+              "Your contribution will be reviewed by an **OpenSource-Hunt maintainer**.\n\n" +
+              "The maintainer may:\n\n" +
+              "- ✅ Approve and merge your PR\n" +
+              "- 💬 Suggest improvements\n" +
+              "- 🔄 Request changes\n\n" +
+              "Please keep an eye on this Pull Request for review comments.\n\n" +
+              "Thank you for helping us build and learn together! 🌊\n\n" +
+              "> **Build. Learn. Contribute.**";
 
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: issue_number,
+              issue_number: prNumber,
               body: message
             });
