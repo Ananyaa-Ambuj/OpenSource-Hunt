@@ -1,0 +1,202 @@
+name: Assign Issue Reviewer
+
+on:
+  issues:
+    types: [opened]
+
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Issue number to assign a reviewer to"
+        required: true
+        type: string
+
+permissions:
+  issues: write
+  contents: read
+  members: read
+
+jobs:
+  assign-reviewer:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Assign reviewer
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber =
+              context.eventName === 'workflow_dispatch'
+                ? Number(context.payload.inputs.issue_number)
+                : context.payload.issue.number;
+
+            // Get issue
+            const { data: issue } =
+              await github.rest.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber
+              });
+
+            const issueCreator = issue.user.login;
+
+            console.log(`Issue: #${issueNumber}`);
+            console.log(`Creator: ${issueCreator}`);
+
+            // ------------------------------------------------
+            // Check whether reviewer is already assigned
+            // ------------------------------------------------
+
+            const existingReviewerLabel = issue.labels.find(
+              label =>
+                typeof label.name === 'string' &&
+                label.name.startsWith('reviewer:')
+            );
+
+            if (existingReviewerLabel) {
+              console.log(
+                `Reviewer already assigned: ${existingReviewerLabel.name}`
+              );
+
+              return;
+            }
+
+            let reviewer;
+
+            // ------------------------------------------------
+            // Check if issue creator is a collaborator
+            // ------------------------------------------------
+
+            let creatorIsCollaborator = false;
+
+            try {
+              const { data } =
+                await github.rest.repos.getCollaboratorPermissionLevel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  username: issueCreator
+                });
+
+              creatorIsCollaborator = [
+                'admin',
+                'maintain',
+                'push',
+                'triage',
+                'pull'
+              ].includes(data.permission);
+
+            } catch (error) {
+              creatorIsCollaborator = false;
+            }
+
+            // ------------------------------------------------
+            // Creator is collaborator
+            // ------------------------------------------------
+
+            if (creatorIsCollaborator) {
+              reviewer = issueCreator;
+
+              console.log(
+                `Issue creator is collaborator. Reviewer: ${reviewer}`
+              );
+            }
+
+            // ------------------------------------------------
+            // Creator is NOT collaborator
+            // Select random collaborator
+            // ------------------------------------------------
+
+            else {
+              const collaborators =
+                await github.paginate(
+                  github.rest.repos.listCollaborators,
+                  {
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    per_page: 100
+                  }
+                );
+
+              // Remove bots
+              const validCollaborators =
+                collaborators.filter(
+                  collaborator =>
+                    collaborator.type === 'User'
+                );
+
+              if (validCollaborators.length === 0) {
+                console.log(
+                  'No repository collaborators available.'
+                );
+
+                return;
+              }
+
+              const randomIndex =
+                Math.floor(
+                  Math.random() * validCollaborators.length
+                );
+
+              reviewer =
+                validCollaborators[randomIndex].login;
+
+              console.log(
+                `Random reviewer selected: ${reviewer}`
+              );
+            }
+
+            // ------------------------------------------------
+            // Create reviewer label
+            // ------------------------------------------------
+
+            const reviewerLabel = `reviewer:${reviewer}`;
+
+            try {
+              await github.rest.issues.getLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: reviewerLabel
+              });
+            } catch (error) {
+
+              await github.rest.issues.createLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: reviewerLabel,
+                description: `Reviewer assigned to the issue: ${reviewer}`
+              });
+            }
+
+            // ------------------------------------------------
+            // Add reviewer label
+            // ------------------------------------------------
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              labels: [reviewerLabel]
+            });
+
+            // ------------------------------------------------
+            // Add comment
+            // ------------------------------------------------
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: `👀 **Reviewer Assigned**
+
+              Reviewer: @${reviewer}
+
+              ${
+                creatorIsCollaborator
+                  ? `The issue was created by a repository collaborator, so the issue creator has been assigned as the reviewer.`
+                  : `The issue creator is not a repository collaborator, so a repository collaborator was randomly selected as the reviewer.`
+              }`
+            });
+
+            console.log(
+              `Successfully assigned reviewer @${reviewer} to issue #${issueNumber}`
+            );
