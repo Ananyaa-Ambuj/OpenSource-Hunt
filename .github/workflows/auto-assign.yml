@@ -22,7 +22,7 @@ jobs:
             const issueNumber = context.issue.number;
             const username = context.payload.comment.user.login;
 
-            // Get issue details
+            // Get issue
             const { data: issue } =
               await github.rest.issues.get({
                 owner: context.repo.owner,
@@ -30,12 +30,14 @@ jobs:
                 issue_number: issueNumber
               });
 
-            // Check if this is a "good first issue"
+            // Check for "good first issue" label
             const isGoodFirstIssue = issue.labels.some(
-              label => label.name.toLowerCase() === 'good first issue'
+              label =>
+                typeof label.name === 'string' &&
+                label.name.toLowerCase() === 'good first issue'
             );
 
-            // Check if the user is already assigned
+            // Check if user is already assigned
             const alreadyAssigned = issue.assignees.some(
               assignee => assignee.login === username
             );
@@ -51,21 +53,23 @@ jobs:
               return;
             }
 
-            // For normal issues, allow only one assignee
+            // Normal issue = only one assignee
             if (!isGoodFirstIssue && issue.assignees.length > 0) {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issueNumber,
-                body: `⚠️ This issue is already assigned to ${issue.assignees
-                  .map(a => '@' + a.login)
-                  .join(', ')}.`
+                body: `⚠️ This issue is already assigned to ${
+                  issue.assignees
+                    .map(a => '@' + a.login)
+                    .join(', ')
+                }.`
               });
 
               return;
             }
 
-            // Assign the user
+            // Assign user
             await github.rest.issues.addAssignees({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -73,7 +77,6 @@ jobs:
               assignees: [username]
             });
 
-            // Different message for good first issue
             const message = isGoodFirstIssue
               ? `🎉 @${username} has been assigned to this **Good First Issue**!
 
