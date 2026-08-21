@@ -23,6 +23,7 @@ jobs:
             const message =
               "## 🎉 Thanks for contributing, @" + username + "!\n\n" +
               "Thank you for opening this Pull Request and contributing to **OpenSource-Hunt**! 🚀\n\n" +
+              " ⭐ Star the repository \n\n" +
               "Your PR has been received successfully.\n\n" +
               "### 🔍 What happens next?\n\n" +
               "Your contribution will be reviewed by an **OpenSource-Hunt maintainer**.\n\n" +

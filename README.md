@@ -85,9 +85,8 @@ Comment:
 /assign
 ```
 
-A maintainer will assign the issue to you.
+Automated Github Actions will assign the issue to you.
 
-> ⚠️ Please don't start working on an issue that is already assigned to someone else.
 
 ---
 
@@ -115,7 +114,7 @@ cd OpenSource-Hunt
 
 ---
 
-### 5️⃣ Create a Branch
+### 5️⃣ Create a Branch (Optional)
 
 Never work directly on `main`. Create a branch for your issue:
 
@@ -149,7 +148,7 @@ Remember:
 
 ---
 
-### 7️⃣ Test Your Changes
+### 7️⃣ Test Your Changes (Optional)
 
 Before committing, run the project locally and confirm your fix actually works. Check that you haven't broken anything else while you were in there.
 

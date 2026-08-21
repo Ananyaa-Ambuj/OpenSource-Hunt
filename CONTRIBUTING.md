@@ -32,25 +32,22 @@ Look for labels such as:
 
 Comment:
 
-/assign
-
-A maintainer will assign the issue to you.
-
-Please don't start working on an issue that is already assigned to someone else.
-
----
-
-### 3. Fork the Repository
-
-Click the **Fork** button on GitHub.
-
-This creates your own copy of the repository.
-
----
-
-### 4. Clone Your Fork
-
-Clone your fork to your computer:
-
 ```bash
-git clone YOUR_FORK_URL
+/assign
+```
+
+---
+
+- [How to Make a Pull Request in the Laptop with VS Code](README.md)
+
+- [How to Make a Pull Request in the Laptop without VS Code](Q&A/How%20to%20Make%20a%20Pull%20Request%20in%20the%20Laptop%20without%20VS%20Code.pdf)
+
+- [How to Make a Pull Request in the Mobile in Web](Q&A/How%20to%20Resolve%20a%20Issue%20and%20Make%20the%20Pull%20Request%20in%20Mobile.pdf)
+
+- [How to Upload a File in Github](Q&A/How%20to%20Upload%20a%20File%20in%20Github.pdf)
+
+---
+
+### THANK YOU FOR CONTRIBUTING
+
+---
