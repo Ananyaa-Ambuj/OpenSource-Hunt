@@ -6,8 +6,7 @@ on:
 
 permissions:
   pull-requests: write
-  issues: read
-  members: read
+  issues: write
 
 jobs:
   assign-reviewer:
