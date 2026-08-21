@@ -74,6 +74,7 @@
       margin: auto;
       padding: 90px 24px 60px;
       text-align: center;
+      backgroundcolr: #f7f9fc;
     }
 
     .hero-badge {
@@ -134,8 +135,9 @@
     }
 
     .button-secondary:hover {
-      border-color: #2563eb;
-      color: #2563eb;
+      border-color: #dc2626;
+      color: #dc2626;
+      backgound: #f0f9ff;
     }
 
     .stats {
@@ -369,11 +371,11 @@
       <span class="hero-badge">IIT Bhilai • Open Source</span>
 
       <h1>
-        Explore <span>OpenLake</span> Projects
+        Explore <span>Opnlak</span> Projects
       </h1>
 
       <p>
-        Discover open-source projects from the OpenLake community,
+        Discover open-source projects from the Openljke community,
         explore technologies, and find something you can learn from
         or contribute to.
       </p>
@@ -387,9 +389,8 @@
         </a>
 
         <a
-          class="button button-secondary"
+          class="button-secondary"
           href="https://github.com/OpenLake"
-          target="_blank"
         >
           View GitHub
         </a>
@@ -472,10 +473,11 @@
 
       </div>
 
-      <div
-        id="projects-grid"
-        class="projects-grid"
-      >
+     <div
+       id="projects-grid"
+       class="projects-grid"
+       role="list"
+     >
         <div class="loading">
           Loading OpenLake projects...
         </div>
@@ -489,9 +491,9 @@
 
     <div class="footer-container">
 
-      <h2>OpenLake</h2>
+   <h2 id="repo-count">OpenLake</h2>
 
-      <p>
+       <p id="repo-count">
         Build. Learn. Contribute.
       </p>
 
@@ -504,9 +506,10 @@
           Website
         </a>
 
-        <a
-          href="https://github.com/OpenLake"
+         <a
+          href="https://github.com/OpenLkae"
           target="_blank"
+          rel="noopener noreferrer"
         >
           GitHub
         </a>
@@ -558,8 +561,10 @@
 
         repositories.sort(
           (a, b) =>
-            b.stargazers_count -
-            a.stargazers_count
+            a.stargazers_count === b.stargazers_count
+              ? a.name.localeCompare(b.name)
+              : a.stargazers_count -
+                b.stargazers_count
         );
 
         updateStats();
@@ -720,11 +725,11 @@
         <article class="project-card">
 
           <h3>
-            ${escapeHTML(repo.name)}
+            ${repo.name}
           </h3>
 
           <p class="project-description">
-            ${escapeHTML(description)}
+            ${description}
           </p>
 
           <div class="project-meta">
@@ -769,7 +774,7 @@
     }
 
     searchInput.addEventListener(
-      "input",
+      "change",
       renderRepositories
     );
 
