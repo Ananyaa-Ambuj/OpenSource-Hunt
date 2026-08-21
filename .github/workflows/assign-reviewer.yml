@@ -2,11 +2,13 @@ name: Assign PR Reviewer
 
 on:
   pull_request:
-    types: [opened]
+    types:
+      - opened
 
 permissions:
-  pull-requests: write
+  contents: read
   issues: write
+  pull-requests: write
 
 jobs:
   assign-reviewer:
@@ -20,40 +22,37 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const pullNumber = context.payload.pull_request.number;
+            const prAuthor = context.payload.pull_request.user.login;
 
-            console.log(`Processing PR #${pullNumber}`);
+            console.log("Processing PR #" + pullNumber);
+            console.log("PR author: @" + prAuthor);
 
             // ==========================================
-            // GET PR
+            // GET PULL REQUEST
             // ==========================================
 
-            const { data: pr } = await github.rest.pulls.get({
-              owner,
-              repo,
+            const prResponse = await github.rest.pulls.get({
+              owner: owner,
+              repo: repo,
               pull_number: pullNumber
             });
+
+            const pr = prResponse.data;
 
             // ==========================================
             // FIND LINKED ISSUE
             // ==========================================
 
-            const text = `${pr.title}\n${pr.body || ""}`;
+            const text =
+              (pr.title || "") +
+              "\n" +
+              (pr.body || "");
 
-            /*
-             * Supports:
-             *
-             * Closes #16
-             * Close #16
-             * Closed #16
-             * Fixes #16
-             * Fix #16
-             * Fixed #16
-             * Resolves #16
-             * Resolve #16
-             */
-
+            // NOTE: "fix" must be followed by an OPTIONAL "e[sd]" group.
+            // Previously this was fix(?:e[sd]?) which made the "e" mandatory,
+            // so plain "Fix #12" (without an "e") never matched.
             const regex =
-              /(?:close[sd]?|fix(?:e[sd]?)|resolve[sd]?)\s+#(\d+)/gi;
+              /(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)/gi;
 
             const issueNumbers = [];
 
@@ -69,227 +68,231 @@ jobs:
             }
 
             console.log(
-              `Linked issues: ${issueNumbers.join(", ")}`
+              "Linked issues: " + issueNumbers.join(", ")
             );
 
             // ==========================================
             // GET REPOSITORY COLLABORATORS
             // ==========================================
 
-            const collaborators = await github.paginate(
-              github.rest.repos.listCollaborators,
-              {
-                owner,
-                repo,
-                per_page: 100
-              }
-            );
+            const collaborators =
+              await github.paginate(
+                github.rest.repos.listCollaborators,
+                {
+                  owner: owner,
+                  repo: repo,
+                  per_page: 100
+                }
+              );
 
-            const users = collaborators.filter(
-              user => user.type === "User"
-            );
+            const validCollaborators =
+              collaborators.filter(function (user) {
+                return user.type === "User";
+              });
 
-            if (users.length === 0) {
+            if (validCollaborators.length === 0) {
               core.setFailed(
                 "No repository collaborators found."
               );
               return;
             }
 
+            console.log(
+              "Found " +
+              validCollaborators.length +
+              " repository collaborators."
+            );
+
             // ==========================================
-            // PROCESS LINKED ISSUE
+            // PROCESS FIRST LINKED ISSUE
             // ==========================================
 
-            for (const issueNumber of issueNumbers) {
-              const { data: issue } =
-                await github.rest.issues.get({
-                  owner,
-                  repo,
-                  issue_number: issueNumber
-                });
+            const issueNumber = issueNumbers[0];
 
-              const issueCreator = issue.user.login;
+            const issueResponse =
+              await github.rest.issues.get({
+                owner: owner,
+                repo: repo,
+                issue_number: issueNumber
+              });
+
+            const issue = issueResponse.data;
+
+            const issueCreator =
+              issue.user.login;
+
+            console.log(
+              "Issue #" +
+              issueNumber +
+              " created by @" +
+              issueCreator
+            );
+
+            // ==========================================
+            // CHECK ISSUE CREATOR
+            // ==========================================
+
+            const creatorIsCollaborator =
+              validCollaborators.some(function (collaborator) {
+                return (
+                  collaborator.login.toLowerCase() ===
+                  issueCreator.toLowerCase()
+                );
+              });
+
+            console.log(
+              "Issue creator is collaborator: " +
+              creatorIsCollaborator
+            );
+
+            // ==========================================
+            // SELECT REVIEWER
+            // ==========================================
+
+            let reviewer = null;
+
+            if (
+              creatorIsCollaborator &&
+              issueCreator.toLowerCase() !==
+                prAuthor.toLowerCase()
+            ) {
+              reviewer = issueCreator;
 
               console.log(
-                `Issue #${issueNumber} created by @${issueCreator}`
+                "Assigning issue creator @" +
+                reviewer +
+                " as reviewer."
               );
+            } else {
+              const availableReviewers =
+                validCollaborators.filter(
+                  function (collaborator) {
+                    return (
+                      collaborator.login.toLowerCase() !==
+                      prAuthor.toLowerCase()
+                    );
+                  }
+                );
 
-              // ========================================
-              // CHECK WHETHER ISSUE CREATOR
-              // IS A COLLABORATOR
-              // ========================================
-
-              let creatorIsCollaborator = false;
-
-              try {
-                await github.rest.repos.checkCollaborator({
-                  owner,
-                  repo,
-                  username: issueCreator
-                });
-
-                creatorIsCollaborator = true;
-              } catch (error) {
-                if (error.status !== 404) {
-                  throw error;
-                }
-              }
-
-              let reviewer;
-
-              // ========================================
-              // CASE 1:
-              // ISSUE CREATOR IS COLLABORATOR
-              // ========================================
-
-              if (creatorIsCollaborator) {
-                reviewer = issueCreator;
-
+              if (availableReviewers.length === 0) {
                 console.log(
-                  `Issue creator is collaborator: @${reviewer}`
-                );
-              }
-
-              // ========================================
-              // CASE 2:
-              // ISSUE CREATOR IS NOT COLLABORATOR
-              // ========================================
-
-              else {
-                const availableReviewers = users.filter(
-                  user =>
-                    user.login.toLowerCase() !==
-                    pr.user.login.toLowerCase()
-                );
-
-                if (availableReviewers.length === 0) {
-                  console.log(
-                    "No available collaborator can review this PR."
-                  );
-                  return;
-                }
-
-                const randomIndex =
-                  Math.floor(
-                    Math.random() * availableReviewers.length
-                  );
-
-                reviewer =
-                  availableReviewers[randomIndex].login;
-
-                console.log(
-                  `Random collaborator selected: @${reviewer}`
-                );
-              }
-
-              // ========================================
-              // DON'T REQUEST PR AUTHOR
-              // TO REVIEW THEIR OWN PR
-              // ========================================
-
-              if (
-                reviewer.toLowerCase() ===
-                pr.user.login.toLowerCase()
-              ) {
-                console.log(
-                  `@${reviewer} created the PR, so another reviewer is needed.`
-                );
-
-                const alternativeReviewers =
-                  users.filter(
-                    user =>
-                      user.login.toLowerCase() !==
-                      pr.user.login.toLowerCase()
-                  );
-
-                if (alternativeReviewers.length === 0) {
-                  console.log(
-                    "No alternative reviewer available."
-                  );
-                  return;
-                }
-
-                const randomIndex =
-                  Math.floor(
-                    Math.random() *
-                    alternativeReviewers.length
-                  );
-
-                reviewer =
-                  alternativeReviewers[randomIndex].login;
-              }
-
-              // ========================================
-              // CHECK EXISTING REVIEWERS
-              // ========================================
-
-              const requestedReviewers =
-                await github.rest.pulls.listRequestedReviewers({
-                  owner,
-                  repo,
-                  pull_number: pullNumber
-                });
-
-              const alreadyRequested =
-                requestedReviewers.data.users.some(
-                  user =>
-                    user.login.toLowerCase() ===
-                    reviewer.toLowerCase()
-                );
-
-              if (alreadyRequested) {
-                console.log(
-                  `@${reviewer} is already requested.`
+                  "No available collaborator can review this PR."
                 );
                 return;
               }
 
-              // ========================================
-              // REQUEST REVIEW
-              // ========================================
+              const randomIndex =
+                Math.floor(
+                  Math.random() *
+                  availableReviewers.length
+                );
 
-              await github.rest.pulls.requestReviewers({
-                owner,
-                repo,
-                pull_number: pullNumber,
-                reviewers: [reviewer]
-              });
+              reviewer =
+                availableReviewers[randomIndex].login;
 
               console.log(
-                `Review requested from @${reviewer}`
+                "Random collaborator selected: @" +
+                reviewer
               );
+            }
 
-              // ========================================
-              // ADD COMMENT TO PR
-              // ========================================
+            // ==========================================
+            // FINAL SAFETY CHECK
+            // ==========================================
 
-              const comment =
-                creatorIsCollaborator
-                  ? `👀 **Reviewer Assigned**\n\n` +
-                    `Reviewer: @${reviewer}\n\n` +
-                    `The issue creator is a repository collaborator, so they have been assigned as the reviewer.\n\n` +
-                    `Linked issue: #${issueNumber}`
-                  : `👀 **Reviewer Assigned**\n\n` +
-                    `Reviewer: @${reviewer}\n\n` +
-                    `The issue creator is not a repository collaborator, so a repository collaborator was randomly selected as the reviewer.\n\n` +
-                    `Linked issue: #${issueNumber}`;
+            if (
+              reviewer.toLowerCase() ===
+              prAuthor.toLowerCase()
+            ) {
+              console.log(
+                "Reviewer cannot be the PR author."
+              );
+              return;
+            }
 
-              await github.rest.issues.createComment({
-                owner,
-                repo,
-                issue_number: pullNumber,
-                body: comment
+            // ==========================================
+            // CHECK EXISTING REVIEWER REQUESTS
+            // ==========================================
+
+            const reviewerResponse =
+              await github.rest.pulls.listRequestedReviewers({
+                owner: owner,
+                repo: repo,
+                pull_number: pullNumber
               });
 
+            const requestedUsers =
+              reviewerResponse.data.users || [];
+
+            const alreadyRequested =
+              requestedUsers.some(function (user) {
+                return (
+                  user.login.toLowerCase() ===
+                  reviewer.toLowerCase()
+                );
+              });
+
+            if (alreadyRequested) {
               console.log(
-                `Comment added to PR #${pullNumber}`
+                "@" +
+                reviewer +
+                " is already requested."
               );
+              return;
+            }
 
-              /*
-               * We only need one reviewer.
-               *
-               * If a PR somehow references multiple
-               * issues, stop after the first one.
-               */
+            // ==========================================
+            // REQUEST REVIEW
+            // ==========================================
 
-              break;
+            await github.rest.pulls.requestReviewers({
+              owner: owner,
+              repo: repo,
+              pull_number: pullNumber,
+              reviewers: [reviewer]
+            });
+
+            console.log(
+              "Review requested from @" +
+              reviewer
+            );
+
+            // ==========================================
+            // CREATE PR COMMENT
+            // ==========================================
+
+            let reason;
+
+            if (creatorIsCollaborator) {
+              reason =
+                "The issue creator is a repository collaborator, so they have been assigned as the reviewer.";
+            } else {
+              reason =
+                "The issue creator is not a repository collaborator, so a repository collaborator was randomly selected as the reviewer.";
+            }
+
+            const comment =
+              "👀 **Reviewer Assigned**\n\n" +
+              "Reviewer: @" +
+              reviewer +
+              "\n\n" +
+              reason +
+              "\n\n" +
+              "Linked issue: #" +
+              issueNumber;
+
+            await github.rest.issues.createComment({
+              owner: owner,
+              repo: repo,
+              issue_number: pullNumber,
+              body: comment
+            });
+
+            console.log(
+              "Comment added to PR #" +
+              pullNumber
+            );
+
+            console.log(
+              "Reviewer assignment completed successfully."
+            );
