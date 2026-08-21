@@ -354,9 +354,9 @@ jobs:
               );
 
 
-              // ========================================
-              // ADD COMMENT TO PR
-              // ========================================
+              # ========================================
+              # ADD COMMENT TO PR
+              # ========================================
 
               await github.rest.issues.createComment({
 
@@ -369,9 +369,9 @@ jobs:
                 body:
                   `👀 **Reviewer Assigned**
 
-@${reviewer} has been requested to review this Pull Request.
+                  @${reviewer} has been requested to review this Pull Request.
 
-Linked issue: #${issueNumber}`
+                  Linked issue: #${issueNumber}`
 
               });
 
