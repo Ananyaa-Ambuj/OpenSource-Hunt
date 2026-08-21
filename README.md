@@ -16,7 +16,7 @@ Your mission:
 
 ---
 
-## 🌊 About Opeake
+## 🌊 About OpenLake
 
 **OpenLake** is IIT Bhilai's hub for Open Source innovation and collaborative development.
 
@@ -24,13 +24,13 @@ The community focuses on building real projects, learning together, and contribu
 
 Explore OpenLake:
 
-* 🌐 Website: https://opene.in/
-* 💻 GitHub: https://git.com/OpenLake
+* 🌐 Website: https://openlake.in/
+* 💻 GitHub: https://github.com/OpenLake
 * 📸 Instagram: https://www.instagram.com/openlake_iitbhilai/
 
 ---
 
-# 🎯 What Is OpenSource-Hunt?
+## 🎯 What Is OpenSource-Hunt?
 
 OpenSource-Hunt is a hands-on contribution challenge created to introduce newcomers to the **real Open Source workflow**.
 
@@ -52,9 +52,9 @@ You just need to be willing to **learn and contribute**.
 
 ---
 
-# 🏁 How It Works
+## 🏁 How It Works
 
-## 1️⃣ Find an Issue
+### 1️⃣ Find an Issue
 
 Head over to the **Issues** section and find something you would like to work on.
 
@@ -75,7 +75,7 @@ Choose an issue according to your current skill level.
 
 ---
 
-## 2️⃣ Ask to Be Assigned
+### 2️⃣ Ask to Be Assigned
 
 Found something interesting?
 
@@ -91,7 +91,7 @@ A maintainer will assign the issue to you.
 
 ---
 
-# 🍴 3️⃣ Fork the Repository
+### 3️⃣ Fork the Repository
 
 Click the **Fork** button on GitHub.
 
@@ -99,7 +99,7 @@ This creates your own copy of OpenSource-Hunt under your GitHub account.
 
 ---
 
-# 💻 4️⃣ Clone Your Fork
+### 4️⃣ Clone Your Fork
 
 Clone your fork:
 
@@ -115,10 +115,27 @@ cd OpenSource-Hunt
 
 ---
 
+### 5️⃣ Create a Branch
+
+Never work directly on `main`. Create a branch for your issue:
+
+```bash
+git checkout -b fix/issue-12
+```
+
+Name it after what you're doing, for example:
+
+```text
+fix/issue-12
+docs/update-readme
+feat/add-dark-mode
+```
+
+Keeping each issue on its own branch is what lets you work on more than one thing without your changes getting tangled together.
 
 ---
 
-# 🛠️ 6️⃣ Make Your Changes
+### 6️⃣ Make Your Changes
 
 Now it's time to solve the issue! 🔎
 
@@ -132,21 +149,22 @@ Remember:
 
 ---
 
-# 🧪 7️⃣ Test Your Changes
+### 7️⃣ Test Your Changes
 
-Before committing, make sure your changes work correctly.
+Before committing, run the project locally and confirm your fix actually works. Check that you haven't broken anything else while you were in there.
 
-Check your Git status:
+Then review exactly what you're about to commit:
 
 ```bash
 git status
+git diff
 ```
 
-Review the files you changed and test the project locally.
+If you see files you didn't mean to change, sort that out before moving on.
 
 ---
 
-# 💾 8️⃣ Commit Your Changes
+### 8️⃣ Commit Your Changes
 
 Stage your changes:
 
@@ -164,7 +182,7 @@ Try to keep commit messages short and descriptive.
 
 ---
 
-# 🚀 9️⃣ Push Your Branch
+### 9️⃣ Push Your Branch
 
 Push your branch to your fork:
 
@@ -172,9 +190,11 @@ Push your branch to your fork:
 git push origin fix/issue-12
 ```
 
+Use the same branch name you created in step 5.
+
 ---
 
-# 🔄 🔟 Create a Pull Request
+### 🔟 Create a Pull Request
 
 Open your fork on GitHub.
 
@@ -190,7 +210,7 @@ This tells GitHub that your Pull Request solves that issue.
 
 ---
 
-# 👀 Pull Request Review
+## 👀 Pull Request Review
 
 Once your Pull Request is submitted, an OpenLake maintainer will review it.
 
@@ -204,13 +224,19 @@ Don't worry if changes are requested!
 
 That's a normal part of Open Source development.
 
-Make the requested changes, commit them, and push again.
+Make the requested changes, commit them, and push again:
 
-Your Pull Request will automatically update.
+```bash
+git add .
+git commit -m "address review comments"
+git push origin fix/issue-12
+```
+
+Your Pull Request will update automatically.
 
 ---
 
-# 🎉 Merge!
+## 🎉 Merge!
 
 Once your Pull Request is approved, it will be merged.
 
@@ -222,7 +248,7 @@ You went through the same basic workflow used in real collaborative software pro
 
 ---
 
-# 🏷️ Issue Labels
+## 🏷️ Issue Labels
 
 | Label               | Description                                    |
 | ------------------- | ---------------------------------------------- |
@@ -237,7 +263,7 @@ You went through the same basic workflow used in real collaborative software pro
 
 ---
 
-# 📚 What You Will Learn
+## 📚 What You Will Learn
 
 By participating in OpenSource-Hunt, you'll get practical experience with:
 
@@ -257,11 +283,9 @@ More importantly, you'll learn how contributors work together on real projects.
 
 ---
 
-# 🤝 Contribution Guidelines
+## 🤝 Contribution Guidelines
 
-Before contributing, please read:
-
-**[CONTRIBUTING.md](CONTRIBUTING.md)**
+Before contributing, please read **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 
 Please remember:
 
@@ -275,7 +299,7 @@ Please remember:
 
 ---
 
-# 🌱 First Time Contributing?
+## 🌱 First Time Contributing?
 
 That's completely okay!
 
@@ -301,7 +325,7 @@ It just needs to be **your first step**.
 
 ---
 
-# 🌊 OpenLake Philosophy
+## 🌊 OpenLake Philosophy
 
 OpenLake's philosophy is simple:
 
@@ -317,24 +341,12 @@ OpenSource-Hunt follows the same idea.
 
 ---
 
-# ⭐ OpenLake
-
-OpenSource-Hunt is an initiative to help newcomers take their first step into the Open Source ecosystem.
-
-Explore more about OpenLake:
-
-🌐 **Website:** https://openlake.in/
-
-💻 **GitHub:** https://github.com/OpenLake
-
-📸 **Instagram:** 
-
----
-
 ## 🚀 Find It. Fix It. Contribute It.
 
 ### Welcome to Open Source.
 
 ### Welcome to OpenLake. 🌊
+
+🌐 [openlake.in](https://openlake.in/) · 💻 [github.com/OpenLake](https://github.com/OpenLake) · 📸 [@openlake_iitbhilai](https://www.instagram.com/openlake_iitbhilai/)
 
 **Happy Contributing! 💙**
