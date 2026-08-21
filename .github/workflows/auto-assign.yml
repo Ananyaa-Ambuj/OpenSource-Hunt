@@ -22,7 +22,7 @@ jobs:
             const issueNumber = context.issue.number;
             const username = context.payload.comment.user.login;
 
-            // Check whether the issue is already assigned
+            // Get issue details
             const { data: issue } =
               await github.rest.issues.get({
                 owner: context.repo.owner,
@@ -30,18 +30,42 @@ jobs:
                 issue_number: issueNumber
               });
 
-            if (issue.assignees.length > 0) {
+            // Check if this is a "good first issue"
+            const isGoodFirstIssue = issue.labels.some(
+              label => label.name.toLowerCase() === 'good first issue'
+            );
+
+            // Check if the user is already assigned
+            const alreadyAssigned = issue.assignees.some(
+              assignee => assignee.login === username
+            );
+
+            if (alreadyAssigned) {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issueNumber,
-                body: `⚠️ This issue is already assigned to ${issue.assignees.map(a => '@' + a.login).join(', ')}.`
+                body: `⚠️ @${username}, you are already assigned to this issue.`
               });
 
               return;
             }
 
-            // Assign issue
+            // For normal issues, allow only one assignee
+            if (!isGoodFirstIssue && issue.assignees.length > 0) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body: `⚠️ This issue is already assigned to ${issue.assignees
+                  .map(a => '@' + a.login)
+                  .join(', ')}.`
+              });
+
+              return;
+            }
+
+            // Assign the user
             await github.rest.issues.addAssignees({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -49,11 +73,11 @@ jobs:
               assignees: [username]
             });
 
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: issueNumber,
-              body: `🎉 Assigned to @${username}!
+            // Different message for good first issue
+            const message = isGoodFirstIssue
+              ? `🎉 @${username} has been assigned to this **Good First Issue**!
+
+              Multiple contributors can work on this issue.
 
               Please follow the contribution workflow:
 
@@ -69,4 +93,26 @@ jobs:
               \`Closes #${issueNumber}\`
 
               Good luck and happy contributing! 🚀`
+              : `🎉 Assigned to @${username}!
+
+              Please follow the contribution workflow:
+
+              1. 🍴 Fork the repository
+              2. 🌿 Create a new branch
+              3. ✏️ Make your changes
+              4. 💾 Commit your changes
+              5. 🚀 Push your branch
+              6. 🔄 Create a Pull Request
+
+              Please link this issue in your Pull Request using:
+
+              \`Closes #${issueNumber}\`
+
+              Good luck and happy contributing! 🚀`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: message
             });
