@@ -9,9 +9,7 @@
     content="Explore OpenLake's open-source projects and discover opportunities to learn, build and contribute."
   />
 
-<!-- Title Should be "OpenLake | Open Source Projects " -->
- 
-  <title>Open</title>
+  <title>OpenLake | Open Source Projects</title>
 
   <style>
     * {
@@ -74,7 +72,7 @@
       margin: auto;
       padding: 90px 24px 60px;
       text-align: center;
-      backgroundcolr: #f7f9fc;
+      background-color: #f7f9fc;
     }
 
     .hero-badge {
@@ -137,7 +135,7 @@
     .button-secondary:hover {
       border-color: #dc2626;
       color: #dc2626;
-      backgound: #f0f9ff;
+      background: #f0f9ff;
     }
 
     .stats {
@@ -354,13 +352,13 @@
   <nav class="navbar">
     <div class="nav-container">
     <div id="logo_open" >
-        <img src="public/favicon.png" alt="Logo" width="32" height="32"> 
+        <img src="public/favicon.png" alt="OpenLake logo" width="32" height="32">
         <a href="#" class="logo">Open<span>Lake</span></a>
     </div>
     <div class="nav-links">
         <a href="#projects">Projects</a>
-        <a href="https://openlake.in/" target="_blank">Website</a>
-        <a href="https://github.com/OpenLake" target="_blank">GitHub</a>
+        <a href="https://openlake.in/" target="_blank" rel="noopener noreferrer">Website</a>
+        <a href="https://github.com/OpenLake" target="_blank" rel="noopener noreferrer">GitHub</a>
       </div>
     </div>
   </nav>
@@ -371,11 +369,11 @@
       <span class="hero-badge">IIT Bhilai • Open Source</span>
 
       <h1>
-        Explore <span>Opnlak</span> Projects
+        Explore <span>OpenLake</span> Projects
       </h1>
 
       <p>
-        Discover open-source projects from the Openljke community,
+        Discover open-source projects from the OpenLake community,
         explore technologies, and find something you can learn from
         or contribute to.
       </p>
@@ -389,8 +387,10 @@
         </a>
 
         <a
-          class="button-secondary"
+          class="button button-secondary"
           href="https://github.com/OpenLake"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           View GitHub
         </a>
@@ -460,11 +460,13 @@
           id="search"
           class="search-box"
           placeholder="Search projects..."
+          aria-label="Search projects"
         />
 
         <select
           id="language-filter"
           class="language-filter"
+          aria-label="Filter by language"
         >
           <option value="all">
             All Languages
@@ -476,7 +478,6 @@
      <div
        id="projects-grid"
        class="projects-grid"
-       role="list"
      >
         <div class="loading">
           Loading OpenLake projects...
@@ -491,9 +492,9 @@
 
     <div class="footer-container">
 
-   <h2 id="repo-count">OpenLake</h2>
+   <h2>OpenLake</h2>
 
-       <p id="repo-count">
+       <p>
         Build. Learn. Contribute.
       </p>
 
@@ -502,12 +503,13 @@
         <a
           href="https://openlake.in/"
           target="_blank"
+          rel="noopener noreferrer"
         >
           Website
         </a>
 
          <a
-          href="https://github.com/OpenLkae"
+          href="https://github.com/OpenLake"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -517,6 +519,7 @@
         <a
           href="https://www.instagram.com/openlake_iitbhilai/"
           target="_blank"
+          rel="noopener noreferrer"
         >
           Instagram
         </a>
@@ -563,8 +566,8 @@
           (a, b) =>
             a.stargazers_count === b.stargazers_count
               ? a.name.localeCompare(b.name)
-              : a.stargazers_count -
-                b.stargazers_count
+              : b.stargazers_count -
+                a.stargazers_count
         );
 
         updateStats();
@@ -725,11 +728,11 @@
         <article class="project-card">
 
           <h3>
-            ${repo.name}
+            ${escapeHTML(repo.name)}
           </h3>
 
           <p class="project-description">
-            ${description}
+            ${escapeHTML(description)}
           </p>
 
           <div class="project-meta">
@@ -750,7 +753,7 @@
 
           <a
             class="project-link"
-            href="${repo.html_url}"
+            href="${escapeHTML(repo.html_url)}"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -774,7 +777,7 @@
     }
 
     searchInput.addEventListener(
-      "change",
+      "input",
       renderRepositories
     );
 
@@ -789,4 +792,3 @@
 
 </body>
 </html>
-
