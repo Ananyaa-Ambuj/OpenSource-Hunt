@@ -115,23 +115,6 @@ cd OpenSource-Hunt
 
 ---
 
-# 🌿 5️⃣ Create a Branch
-
-Never work directly on `main`.
-
-Create a new branch for your issue:
-
-```bash
-git switch -c fix/issue-12
-```
-
-Examples:
-
-```text
-fix/issue-12
-docs/issue-18
-feature/issue-25
-```
 
 ---
 
