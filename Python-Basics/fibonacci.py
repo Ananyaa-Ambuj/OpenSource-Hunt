@@ -1,7 +1,7 @@
 def fibonacci(n):
     sequence = []
 
-    a = 0  # Wrong starting value
+    a = 1
     b = 1
 
     for _ in range(n):
