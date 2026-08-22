@@ -7,7 +7,7 @@ void swap(int a, int b) {
 }
 
 int main() {
-    int a, b;
+    int a, b,temp;
 
     printf("Enter two numbers: ");
     scanf("%d %d", &a, &b);
