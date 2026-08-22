@@ -30,13 +30,6 @@ jobs:
                 issue_number: issueNumber
               });
 
-            // Check for "good first issue" label
-            const isGoodFirstIssue = issue.labels.some(
-              label =>
-                typeof label.name === 'string' &&
-                label.name.toLowerCase() === 'good first issue'
-            );
-
             // Check if user is already assigned
             const alreadyAssigned = issue.assignees.some(
               assignee => assignee.login === username
@@ -53,8 +46,8 @@ jobs:
               return;
             }
 
-            // Normal issue = only one assignee
-            if (!isGoodFirstIssue && issue.assignees.length > 0) {
+            // Only one assignee is allowed for every issue
+            if (issue.assignees.length > 0) {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -77,27 +70,8 @@ jobs:
               assignees: [username]
             });
 
-            const message = isGoodFirstIssue
-              ? `🎉 @${username} has been assigned to this **Good First Issue**!
-
-              Multiple contributors can work on this issue.
-
-              Please follow the contribution workflow:
-
-              1. 🍴 Fork the repository
-              2. ⭐ Star the repository
-              3. 🌿 Create a new branch (Optional)
-              4. ✏️ Make your changes
-              5. 💾 Commit your changes
-              6. 🚀 Push your branch
-              7. 🔄 Create a Pull Request
-
-              Please link this issue in your Pull Request using:
-
-              \`Closes #${issueNumber}\`
-
-              Good luck and happy contributing! 🚀`
-              : `🎉 Assigned to @${username}!
+            const message =
+              `🎉 Assigned to @${username}!
 
               Please follow the contribution workflow:
 
