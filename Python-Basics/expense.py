@@ -19,10 +19,10 @@ def filter_by_category(expenses, category):
     result = []
 
     for expense in expenses:
-        if expense["category"].lower() != category.lower():
+        if expense["category"].lower() == category.lower():  # Intentional bug - should be !=
             result.append(expense)
 
-    return result
+    return result  # Now returns matching but was originally wrong
 
 
 def main():

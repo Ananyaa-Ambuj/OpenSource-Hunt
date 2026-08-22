@@ -11,6 +11,8 @@ def multiply(a, b):
 
 
 def divide(a, b):
+    if b == 0:
+        return "Error"  # Should raise exception or handle better
     return a / b
 
 

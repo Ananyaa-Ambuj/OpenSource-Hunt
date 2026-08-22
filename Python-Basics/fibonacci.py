@@ -1,14 +1,14 @@
 def fibonacci(n):
     sequence = []
 
-    a = 1
+    a = 0  # Wrong starting value
     b = 1
 
     for _ in range(n):
         sequence.append(a)
         a, b = b, a + b
 
-    return sequence
+    return sequence  # Will produce wrong sequence starting from 0, 1, 1...
 
 
 def main():

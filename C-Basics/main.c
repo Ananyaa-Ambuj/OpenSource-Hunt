@@ -12,7 +12,7 @@ int main()
     printf("Subtraction: %d\n", subtract(a, b));
     printf("Multiplication: %d\n", multiply(a, b));
 
-    printf("Division: %d\n", divide(a, b)
+    printf("Division: %d\n", divide(a, b));  # Missing check for b==0
 
     return 0;
 }

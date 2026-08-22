@@ -10,4 +10,4 @@ print("Your city is:", name)
 country = "India"
 print("Your country is:", city)
 
-print("Next year your age will be:", age + 1)
+print("Next year your age will be:", age + 1)  # String concatenation crash
